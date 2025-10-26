@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anime & TV Tracker</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial;
+      background: #e61212;
+      color: #f6fe03;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 { text-align: center; }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #0713f7;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(19, 134, 228, 0.1);
+    }
+    input, select, button {
+      width: 100%;
+      margin: 5px 0;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #060606;
+    }
+    .show {
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #f110c1;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<script src="style.js"></script>
+<body>
+  <h1>🎬 Anime & TV Tracker</h1>
+  <div class="container">
+    <h3>Add a Show</h3>
+    <input type="text" id="title" placeholder="Enter show title">
+    <select id="status">
+      <option value="Watching">Watching</option>
+      <option value="Completed">Completed</option>
+      <option value="Plan to Watch">Plan to Watch</option>
+    </select>
+    <button onclick="addShow()">Add</button>
+
+    <h3>Your Watchlist</h3>
+    <h4>📺 Watching</h4>
+    <div id="watching"></div>
+
+    <h4>✅ Completed</h4>
+    <div id="completed"></div>
+
+    <h4>🕒 Plan to Watch</h4>
+    <div id="plan"></div>
+    <button onclick="clearAll()">Clear 
+    All</button>
+    <div id="list"></div>
+  </div>
+
+  <script>
+    let shows = JSON.parse(localStorage.getItem('shows')) || [];
+
+    function renderShows() {
+      const list = document.getElementById('list');
+      list.innerHTML = '';
+      shows.forEach((show, index) => {
+        list.innerHTML += `
+          <div class="show">
+            <b>${show.title}</b> - ${show.status}
+            <button onclick="removeShow(${index})">Remove</button>
+          </div>
+        `;
+      });
+    }
+
+    function addShow() {
+      const title = document.getElementById('title').value;
+      const status = document.getElementById('status').value;
+      if (title.trim() === '') return alert('Enter a show title!');
+      shows.push({ title, status });
+      localStorage.setItem('shows', JSON.stringify(shows));
+      document.getElementById('title').value = '';
+      renderShows();
+    }
+
+    function removeShow(index) {
+      shows.splice(index, 1);
+      localStorage.setItem('shows', JSON.stringify(shows));
+      renderShows();
+    }
+
+    renderShows();
+  </script>
+</body>
+</html>
